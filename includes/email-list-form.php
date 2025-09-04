@@ -19,7 +19,13 @@ function create_rest_endpoint()
     ));
 }
 
-function handle_enquiry()
+function handle_enquiry($data)
 {
-     echo 'Hello'; 
+     $params = $data->get_params(); 
+
+     if ( !isset($params['_wpnonce']) ||!wp_verify_nonce( $params['_wpnonce'], 'wp_rest' ) ) {
+         return new WP_Rest_response('Message not sent', 422);
+        }
+        
+        return new WP_Rest_response('Message SENT!', 200);
 }
