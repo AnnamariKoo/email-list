@@ -27,5 +27,31 @@ function handle_enquiry($data)
          return new WP_Rest_response('Message not sent', 422);
         }
         
-        return new WP_Rest_response('Message SENT!', 200);
-}
+    unset($params['_wpnonce']);
+    unset($params['_wp_http_referer']);
+
+    // Send the email message
+    $headers = [];
+
+    $admin_email = get_bloginfo('admin_email');
+    $admin_name = get_bloginfo('name');
+
+    $headers[] = "From: {$admin_name} <{$admin_email}>";
+    $headers[] = "Reply-To: {$params['name']} <{$params['email']}>";
+    $headers[] = "Content-Type: text/html"; 
+
+    $subject = "Uusi viesti henkilöltä {$params['etunimi']} {$params['sukunimi']}";
+
+    $message = '';
+    $message .= "<h1>{$params['etunimi']} {$params['sukunimi']} haluaa liittyä sähköpostilistalle</h1>";
+
+    foreach($params as $label => $value) 
+        {
+            $message .=  '<strong>' . ucfirst($label) . ': </strong>' . $value . '<br />';
+        }
+
+        wp_mail($admin_email, $subject, $message, $headers);
+
+        return new WP_Rest_Response('The message was sent', 200);   
+
+    }

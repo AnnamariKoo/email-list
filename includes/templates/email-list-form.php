@@ -2,11 +2,13 @@
 
     <?php wp_nonce_field('wp_rest'); ?>
 
-    <label for="etunimi">Etunimi</label>
-    <input type="text" name="etunimi">
+    <div class="kokonimi">
+        <label for="etunimi">Etunimi</label>
+        <input type="text" name="etunimi">
+        <label for="sukunimi">Sukunimi</label>
+        <input type="text" name="sukunimi">
+    </div>
     
-    <label for="sukunimi">Sukunimi</label>
-    <input type="text" name="sukunimi">
 
     <label for="email">Sähköposti</label>
     <input type="text" name="email">
@@ -39,7 +41,6 @@
             params.append(pair[0], pair[1]);
         }
 
-        alert(params.toString());
 
         fetch("<?php echo get_rest_url(null, 'v1/email-form/submit'); ?>", {
             method: "POST",
