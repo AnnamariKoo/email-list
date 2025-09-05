@@ -47,7 +47,7 @@ function handle_enquiry($data)
 
     foreach($params as $label => $value) 
         {
-            $message .=  '<strong>' . ucfirst($label) . ': </strong>' . $value . '<br />';
+            $message .=  '<strong>' . ucfirst($label) . ': </strong>: ' . $value . '<br />';
         }
 
         wp_mail($admin_email, $subject, $message, $headers);
