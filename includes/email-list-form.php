@@ -4,6 +4,24 @@ add_shortcode('email-list-form', 'show_email_list_form');
 
 add_action('rest_api_init', 'create_rest_endpoint');
 
+add_action('init', 'create_mailing_list_page');
+
+function create_mailing_list_page()
+{
+    $args = [
+
+        'public' => true,
+        'has_archive' => true,
+        'labels'  => [
+            'name' => 'Submissions', 
+            'singular_name' => 'Submission'
+        ],
+        'capabilities' => [ 'create_posts' => 'do_not_allow']
+    ];
+
+    register_post_type('mailing_list', $args);
+}
+
 function show_email_list_form() 
 {
     include MY_PLUGIN_PATH . 'includes/templates/email-list-form.php';

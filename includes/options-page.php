@@ -13,7 +13,7 @@ function load_carbon_fields(): void
 
 function create_options_page(): void
 {
-    Container::make( 'theme_options', __( 'Sähköpostilista asetukset' ) )
+    Container::make( 'theme_options', __( 'Sähköpostilistan asetukset' ) )
         ->set_icon('dashicons-email')
         ->add_fields( array(
 
