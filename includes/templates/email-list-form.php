@@ -36,7 +36,7 @@
             params.append(pair[0], pair[1]);
         }
 
-        fetch("<?php echo get_rest_url(null, 'v1/email-form/submitx'); ?>", {
+        fetch("<?php echo get_rest_url(null, 'v1/email-form/submit'); ?>", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
