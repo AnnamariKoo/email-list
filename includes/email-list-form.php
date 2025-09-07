@@ -8,9 +8,24 @@ add_action('init', 'create_mailing_list_page');
 
 add_action('add_meta_boxes', 'create_meta_box');
 
+add_filter('manage_mailing_list_posts_columns', 'custom_mailing_list_columns');
+
+function custom_mailing_list_columns($columns)
+{
+    $columns = array(
+
+        'cb' => $columns['cb'],
+        'etunimi' => __('Etunimi', 'email-list-plugin'),
+        'sukunimi' => __('Sukunimi', 'email-list-plugin'),
+        'email' => __('Email', 'email-list-plugin'),
+        'organisaatio' => __('Organisaatio', 'email-list-plugin'),
+    );
+
+    return $columns;
+}
+
 function create_meta_box()
 {
-
 
     add_meta_box('custom_email_list_form', 'Submission', 'display_submission', 'mailing_list');
 }
