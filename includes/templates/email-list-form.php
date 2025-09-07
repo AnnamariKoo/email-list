@@ -1,8 +1,11 @@
+<div id="form_succes"></div>
+<div id="form_error"></div>
+
 <form id="enquiry_form">
 
     <?php wp_nonce_field('wp_rest'); ?>
 
-    <div class="kokonimi">
+    <div id="kokonimi">
         <label for="etunimi">Etunimi</label>
         <input type="text" name="etunimi">
         <label for="sukunimi">Sukunimi</label>
@@ -21,17 +24,9 @@
 
 <script>
 
-    // jQuery(document).ready(function($){
-
-    //     $("#enquiry_form").submit( function(event){
-
-    //         alert('test')
-
-    //     });
-    // });
     document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('enquiry_form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Uncomment if you want to prevent form submission
+        event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
 
@@ -41,20 +36,39 @@
             params.append(pair[0], pair[1]);
         }
 
-
-        fetch("<?php echo get_rest_url(null, 'v1/email-form/submit'); ?>", {
+        fetch("<?php echo get_rest_url(null, 'v1/email-form/submitx'); ?>", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: params.toString()
         })
-        .then(response => response.json())
-        .then(data => {
-            // Handle response
-            console.log(data);
+        .then(response => {
+            console.log("response", response);
+            if (!response.ok) {
+                const errorDiv = document.getElementById('form_error');
+                errorDiv.textContent = 'Viestiä ei lähetetty. Yritä uudelleen';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Hide the form
+            form.style.display = 'none';
+            // Show the success message
+            const successDiv = document.getElementById('form_succes');
+            successDiv.textContent = "Lähetys onnistui!";
+            successDiv.style.display = 'block';
+            successDiv.style.opacity = 0;
+            setTimeout(() => {
+                successDiv.style.transition = 'opacity 0.5s';
+                successDiv.style.opacity = 1;
+            }, 10);
         })
         .catch(error => {
+            console.log("error", error);
+            const errorDiv = document.getElementById('form_error');
+            errorDiv.textContent = 'Viestiä ei lähetetty. Yritä uudelleen';
+            errorDiv.style.display = 'block';
             console.error('Error:', error);
         });
     });

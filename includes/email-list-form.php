@@ -37,7 +37,7 @@ function handle_enquiry($data)
     $admin_name = get_bloginfo('name');
 
     $headers[] = "From: {$admin_name} <{$admin_email}>";
-    $headers[] = "Reply-To: {$params['name']} <{$params['email']}>";
+    $headers[] = "Reply-To: {$params['etunimi']} <{$params['email']}>";
     $headers[] = "Content-Type: text/html"; 
 
     $subject = "Uusi viesti henkilöltä {$params['etunimi']} {$params['sukunimi']}";
