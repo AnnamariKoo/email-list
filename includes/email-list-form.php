@@ -6,6 +6,34 @@ add_action('rest_api_init', 'create_rest_endpoint');
 
 add_action('init', 'create_mailing_list_page');
 
+add_action('add_meta_boxes', 'create_meta_box');
+
+function create_meta_box()
+{
+
+
+    add_meta_box('custom_email_list_form', 'Submission', 'display_submission', 'mailing_list');
+}
+
+function display_submission()
+{
+
+    $post_metas = get_post_meta( get_the_ID());
+
+    unset($post_metas['_edit_lock']);
+
+    echo '<ul>';
+
+    foreach ($post_metas as $key => $value) {
+
+        echo '<li><strong>' . ucfirst($key) . '</strong>: <br>' . esc_html($value[0]) . '</li>';
+    }
+
+    echo '</ul>';
+
+
+    }
+
 function create_mailing_list_page()
 {
     $args = [
@@ -16,12 +44,17 @@ function create_mailing_list_page()
             'name' => 'Submissions', 
             'singular_name' => 'Submission'
         ],
-        'capabilities' => [ 'create_posts' => 'do_not_allow']
+        'supports' => false,
+        'capability_type' => 'post',
+        'capabilities' => array(
+            'create_posts' => false,
+        ),
+        'map_meta_cap' => true
+        
     ];
 
     register_post_type('mailing_list', $args);
 }
-
 function show_email_list_form() 
 {
     include MY_PLUGIN_PATH . 'includes/templates/email-list-form.php';
@@ -63,10 +96,22 @@ function handle_enquiry($data)
     $message = '';
     $message .= "<h1>{$params['etunimi']} {$params['sukunimi']} haluaa liittyä sähköpostilistalle</h1>";
 
+    $postarr = [
+        
+        'post_title' => $params['etunimi'] . ' ' . $params['sukunimi'],
+        'post_type' => 'mailing_list',
+        'post_status' => 'publish'
+    ];
+
+        $post_id = wp_insert_post($postarr);
+
     foreach($params as $label => $value) 
         {
             $message .=  '<strong>' . ucfirst($label) . ': </strong>: ' . $value . '<br />';
+
+            add_post_meta($post_id, $label, $value);
         }
+
 
         wp_mail($admin_email, $subject, $message, $headers);
 
