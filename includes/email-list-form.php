@@ -12,6 +12,38 @@ add_filter('manage_mailing_list_posts_columns', 'custom_mailing_list_columns');
 
 add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_columns', 10, 2);
 
+add_action('admin_init', 'setup_search');
+
+function setup_search() {
+
+    global $typenow;
+
+    if($typenow === 'mailing_list') {
+        add_filter('posts_search', 'mailing_list_search_override', 10, 2);
+    }
+}
+
+function mailing_list_search_override($search, $query) {
+
+    global $wpdb;
+
+    if($query->is_main_query() && !empty($query->query['s'])) {
+        $sql  = " 
+            or exists (
+                select * from $wpdb->postmeta
+                where post_id = $wpdb->posts.ID
+                and meta_key in ('etunimi', 'sukunimi', 'email', 'organisaatio')
+                and meta_value like %s 
+            )
+        ";
+        $like = '%' . $wpdb->esc_like($query->query['s']) . '%';
+        $search = preg_replace("#\({$wpdb->posts}.post_title LIKE [^)]+\)\K#", $wpdb->prepare($sql, $like), $search);
+    }
+
+    return $search;
+
+}
+
 function fill_custom_mailing_list_columns($column, $post_id) {
 
     switch($column) {
