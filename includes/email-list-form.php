@@ -10,8 +10,29 @@ add_action('add_meta_boxes', 'create_meta_box');
 
 add_filter('manage_mailing_list_posts_columns', 'custom_mailing_list_columns');
 
-function custom_mailing_list_columns($columns)
-{
+add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_columns', 10, 2);
+
+function fill_custom_mailing_list_columns($column, $post_id) {
+
+    switch($column) {
+
+        case 'etunimi':
+            echo get_post_meta($post_id, 'etunimi', true);
+            break;
+        case 'sukunimi':
+            echo get_post_meta($post_id, 'sukunimi', true);
+            break;
+        case 'email':
+            echo get_post_meta($post_id, 'email', true);
+            break;
+        case 'organisaatio':
+            echo get_post_meta($post_id, 'organisaatio', true);
+            break;
+    }
+
+}
+
+function custom_mailing_list_columns($columns){
     $columns = array(
 
         'cb' => $columns['cb'],
@@ -24,14 +45,12 @@ function custom_mailing_list_columns($columns)
     return $columns;
 }
 
-function create_meta_box()
-{
+function create_meta_box(){
 
     add_meta_box('custom_email_list_form', 'Submission', 'display_submission', 'mailing_list');
 }
 
-function display_submission()
-{
+function display_submission(){
 
     $post_metas = get_post_meta( get_the_ID());
 
@@ -49,8 +68,7 @@ function display_submission()
 
     }
 
-function create_mailing_list_page()
-{
+function create_mailing_list_page(){
     $args = [
 
         'public' => true,
@@ -70,14 +88,12 @@ function create_mailing_list_page()
 
     register_post_type('mailing_list', $args);
 }
-function show_email_list_form() 
-{
+function show_email_list_form() {
     include MY_PLUGIN_PATH . 'includes/templates/email-list-form.php';
 
 }
 
-function create_rest_endpoint()
-{
+function create_rest_endpoint(){
     register_rest_route('v1/email-form', 'submit', array(
 
         'methods' => 'POST',
@@ -85,8 +101,7 @@ function create_rest_endpoint()
     ));
 }
 
-function handle_enquiry($data)
-{
+function handle_enquiry($data){
      $params = $data->get_params(); 
 
      if ( !isset($params['_wpnonce']) ||!wp_verify_nonce( $params['_wpnonce'], 'wp_rest' ) ) {
