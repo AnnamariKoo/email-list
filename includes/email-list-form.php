@@ -117,9 +117,12 @@ function create_mailing_list_page(){
 
         'public' => true,
         'has_archive' => true,
+        'menu_position' => 30,
+        'publicly_queryable' => false,
         'labels'  => [
             'name' => 'Submissions', 
-            'singular_name' => 'Submission'
+            'singular_name' => 'Submission',
+            'edit_item' => 'View submission'
         ],
         'supports' => false,
         'capability_type' => 'post',
