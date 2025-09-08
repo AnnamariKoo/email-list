@@ -14,6 +14,14 @@ add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_
 
 add_action('admin_init', 'setup_search');
 
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+
+function enqueue_custom_scripts() {
+
+    wp_enqueue_style('email-list-plugin', MY_PLUGIN_URL . 'assets/css/email-list-plugin.css');
+
+}
+
 function setup_search() {
 
     global $typenow;
