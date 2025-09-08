@@ -1,3 +1,5 @@
+<?php if(get_plugin_options('email_list_plugin_active')):?>
+
 <div id="form_succes"></div>
 <div id="form_error"></div>
 
@@ -75,3 +77,9 @@
 });
 
 </script>
+
+<?php else:?>
+
+<p>Lomake ei ole käytössä.</p>
+
+<?php endif; ?>

@@ -169,6 +169,14 @@ function handle_enquiry($data){
     $admin_email = get_bloginfo('admin_email');
     $admin_name = get_bloginfo('name');
 
+
+    //Set recipient email
+    $recipient_email = get_plugin_options('email_list_plugin_recipients');
+
+    if(!$recipient_email){
+        $recipient_email = $admin_email;
+    }
+
     $headers[] = "From: {$admin_name} <{$admin_email}>";
     $headers[] = "Reply-To: {$field_etunimi} <{$field_email}>";
     $headers[] = "Content-Type: text/html"; 
@@ -209,7 +217,7 @@ function handle_enquiry($data){
         }
 
 
-        wp_mail($admin_email, $subject, $message, $headers);
+        wp_mail($recipient_email, $subject, $message, $headers);
 
         return new WP_Rest_Response('The message was sent', 200);   
 
