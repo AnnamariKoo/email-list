@@ -1,5 +1,9 @@
 <?php
 
+if( !defined( 'ABSPATH' ) ) {
+    die( 'You cannot be here' );
+}
+
 add_shortcode('email-list-form', 'show_email_list_form');
 
 add_action('rest_api_init', 'create_rest_endpoint');
@@ -57,16 +61,16 @@ function fill_custom_mailing_list_columns($column, $post_id) {
     switch($column) {
 
         case 'etunimi':
-            echo get_post_meta($post_id, 'etunimi', true);
+            echo esc_html(get_post_meta($post_id, 'etunimi', true));
             break;
         case 'sukunimi':
-            echo get_post_meta($post_id, 'sukunimi', true);
+            echo esc_html(get_post_meta($post_id, 'sukunimi', true));
             break;
         case 'email':
-            echo get_post_meta($post_id, 'email', true);
+            echo esc_html(get_post_meta($post_id, 'email', true));
             break;
         case 'organisaatio':
-            echo get_post_meta($post_id, 'organisaatio', true);
+            echo esc_html(get_post_meta($post_id, 'organisaatio', true));
             break;
     }
 
@@ -142,7 +146,15 @@ function create_rest_endpoint(){
 }
 
 function handle_enquiry($data){
+
+    //Get all parameters from form
      $params = $data->get_params(); 
+
+     //Set fields from form
+     $field_etunimi = sanitize_text_field($params['etunimi']);
+     $field_sukunimi = sanitize_text_field($params['sukunimi']);
+     $field_email = sanitize_email($params['email']);
+     $field_organisaatio = sanitize_text_field($params['organisaatio']);
 
      if ( !isset($params['_wpnonce']) ||!wp_verify_nonce( $params['_wpnonce'], 'wp_rest' ) ) {
          return new WP_Rest_response('Message not sent', 422);
@@ -158,17 +170,17 @@ function handle_enquiry($data){
     $admin_name = get_bloginfo('name');
 
     $headers[] = "From: {$admin_name} <{$admin_email}>";
-    $headers[] = "Reply-To: {$params['etunimi']} <{$params['email']}>";
+    $headers[] = "Reply-To: {$field_etunimi} <{$field_email}>";
     $headers[] = "Content-Type: text/html"; 
 
-    $subject = "Uusi viesti henkilöltä {$params['etunimi']} {$params['sukunimi']}";
+    $subject = "Uusi viesti henkilöltä {$field_etunimi} {$field_sukunimi}";
 
     $message = '';
-    $message .= "<h1>{$params['etunimi']} {$params['sukunimi']} haluaa liittyä sähköpostilistalle</h1>";
+    $message .= "<h1>{$field_etunimi} {$field_sukunimi} haluaa liittyä sähköpostilistalle</h1>";
 
     $postarr = [
-        
-        'post_title' => $params['etunimi'] . ' ' . $params['sukunimi'],
+
+        'post_title' => $field_etunimi . ' ' . $field_sukunimi,
         'post_type' => 'mailing_list',
         'post_status' => 'publish'
     ];
@@ -177,9 +189,23 @@ function handle_enquiry($data){
 
     foreach($params as $label => $value) 
         {
-            $message .=  '<strong>' . ucfirst($label) . ': </strong>: ' . $value . '<br />';
 
-            add_post_meta($post_id, $label, $value);
+            switch($label) {
+                case 'email':
+                    $value = sanitize_email($value);
+                break;
+
+                case 'organisaatio':
+                    $value = sanitize_text_field($value);
+                    break;
+
+                default:
+                    $value = sanitize_text_field($value);
+            }
+
+            add_post_meta($post_id, sanitize_text_field($label), $value);
+
+            $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '<br />';
         }
 
 
