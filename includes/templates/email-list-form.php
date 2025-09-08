@@ -1,6 +1,6 @@
 <?php if(get_plugin_options('email_list_plugin_active')):?>
 
-<div id="form_succes"></div>
+<div id="form_success"></div>
 <div id="form_error"></div>
 
 <form id="enquiry_form">
@@ -53,12 +53,13 @@
                 errorDiv.style.display = 'block';
                 return;
             }
-
-            // Hide the form
+                return response.json(); // <-- get plain text response
+})
+        .then(data => {
+            if (!data) return; // If previous .then returned nothing (error)
             form.style.display = 'none';
-            // Show the success message
-            const successDiv = document.getElementById('form_succes');
-            successDiv.textContent = "Lähetys onnistui!";
+            const successDiv = document.getElementById('form_success');
+            successDiv.textContent = data; // <-- show API response
             successDiv.style.display = 'block';
             successDiv.style.opacity = 0;
             setTimeout(() => {
@@ -66,6 +67,7 @@
                 successDiv.style.opacity = 1;
             }, 10);
         })
+    
         .catch(error => {
             console.log("error", error);
             const errorDiv = document.getElementById('form_error');

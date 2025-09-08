@@ -1,7 +1,7 @@
 <?php
 
-function get_plugin_options($name) 
+function get_plugin_options($etunimi) 
 {
-    return carbon_get_theme_option($name);
+    return carbon_get_theme_option($etunimi);
 }
 

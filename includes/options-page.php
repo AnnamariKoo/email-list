@@ -29,7 +29,7 @@ function create_options_page(): void
 
             Field::make( 'textarea', 'email_list_plugin_message', __( 'Vahvistusviesti' ) )
             ->set_attribute( 'placeholder', 'Kirjoita vahvistusviesti' )
-            ->set_help_text('Vahvistusviesti, joka lähetetään lomakkeen lähettäjälle'),
+            ->set_help_text('Vahvistusviesti, joka näytetään lomakkeen lähettäjälle'),
 
     ) );
 }

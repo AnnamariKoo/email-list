@@ -219,6 +219,13 @@ function handle_enquiry($data){
 
         wp_mail($recipient_email, $subject, $message, $headers);
 
-        return new WP_Rest_Response('The message was sent', 200);   
+        $confirmation_message = 'Kiitos ilmoittautumisesta postituslistalle!';
+
+        if(get_plugin_options('email_list_plugin_message')) {
+            $confirmation_message = get_plugin_options('email_list_plugin_message');
+            $confirmation_message = str_replace('{etunimi}', $field_etunimi, $confirmation_message);
+        }
+
+        return new WP_Rest_Response($confirmation_message, 200);
 
     }
