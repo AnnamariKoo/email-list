@@ -1,5 +1,5 @@
 #email_list_form {
-  font-family: "Josefin Sans", sans-serif;
+  font-family: "Railway", sans-serif;
   background: white;
   border-radius: 25px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
@@ -31,7 +31,6 @@
   color: #ffffff;
   border: none;
   border-radius: 25px 0 25px 25px;
-  margin-top: 30px;
   padding: 15px;
   width: fit-content;
   font-family: "Josefin Sans", sans-serif;
@@ -39,7 +38,15 @@
   text-transform: uppercase;
 }
 
-.form_notification {
-  max-width: 500px;
-  margin: 30px auto;
+.button_wrapper {
+  margin-top: 10px;
+}
+
+#form_error {
+  color: red;
+  font-size: small;
+  text-transform: uppercase;
+  height: 20px;
+  margin: 5px;
+  visibility: hidden;
 }

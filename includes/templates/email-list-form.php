@@ -1,7 +1,6 @@
 <?php if(get_plugin_options('email_list_plugin_active')):?>
 
 <div id="form_success" class="form_notification"></div>
-<div id="form_error" class="form_notification"></div>
 
 <form id="email_list_form">
 
@@ -19,8 +18,10 @@
 
     <label for="organisaatio">Organisaatio</label>
     <input type="text" name="organisaatio">
-
-    <button type="submit">Liity postituslistalle</button>
+    <div class="button_wrapper">
+        <div id="form_error" class="form_notification"></div>
+        <button type="submit">Liity postituslistalle</button>
+    </div>
 </form>
 
 <script>
@@ -38,20 +39,20 @@
 
             if (!value.trim() || value.trim().length < 2) {
                 errorDiv.textContent = `Tarkista ${key}!`;
-                errorDiv.style.display = 'block';
+                errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
             }
             // Optionally clear error here if needed
 
             if (key === "email" && !emailPattern.test(value)) {
                 errorDiv.textContent = 'Syötä kelvollinen sähköpostiosoite!';
-                errorDiv.style.display = 'block';
+                errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
                 
             }
         }
         errorDiv.textContent = '';
-        errorDiv.style.display = 'none';
+        // errorDiv.style.display = 'none';
 
         // Convert FormData to URL-encoded string
         const params = new URLSearchParams();
@@ -70,7 +71,7 @@
             if (!response.ok) {
                 const errorDiv = document.getElementById('form_error');
                 errorDiv.textContent = 'Viestiä ei lähetetty. Yritä uudelleen';
-                errorDiv.style.display = 'block';
+                errorDiv.style.visibility = 'visible';
                 return;
             }
                 return response.json(); // <-- get plain text response
@@ -83,7 +84,7 @@
             successDiv.style.display = 'block';
             successDiv.style.opacity = 0;
             setTimeout(() => {
-                successDiv.style.transition = 'opacity 0.2s';
+                successDiv.style.transition = 'opacity 0.05s';
                 successDiv.style.opacity = 1;
             }, 10);
         })
@@ -92,7 +93,7 @@
             console.log("error", error);
             const errorDiv = document.getElementById('form_error');
             errorDiv.textContent = 'Viestiä ei lähetetty. Yritä uudelleen';
-            errorDiv.style.display = 'block';
+            errorDiv.style.visibility = 'visible';
             console.error('Error:', error);
         });
     });
