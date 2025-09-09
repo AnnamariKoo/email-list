@@ -1,18 +1,17 @@
 <?php if(get_plugin_options('email_list_plugin_active')):?>
 
-<div id="form_success"></div>
-<div id="form_error"></div>
+<div id="form_success" class="form_notification"></div>
+<div id="form_error" class="form_notification"></div>
 
-<form id="enquiry_form">
+<form id="email_list_form">
 
     <?php wp_nonce_field('wp_rest'); ?>
 
-    <div id="kokonimi">
-        <label for="etunimi">Etunimi</label>
-        <input type="text" name="etunimi">
-        <label for="sukunimi">Sukunimi</label>
-        <input type="text" name="sukunimi">
-    </div>
+
+    <label for="etunimi">Etunimi</label>
+    <input type="text" name="etunimi"></input>
+    <label for="sukunimi">Sukunimi</label>
+    <input type="text" name="sukunimi">
     
 
     <label for="email">Sähköposti</label>
@@ -26,23 +25,18 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('enquiry_form').addEventListener('submit', function(event) {
+    document.getElementById('email_list_form').addEventListener('submit', function(event) {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
-        console.log("Form Data:", Object.fromEntries(formData));
-
         const formObj = Object.fromEntries(formData);
         const errorDiv = document.getElementById('form_error');
-
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         for (const [key, value] of Object.entries(formObj)) {
             if (key === '_wpnonce' || key === '_wp_http_referer') continue;
 
-            console.log('value.length', value.length);
             if (!value.trim() || value.trim().length < 2) {
-                console.log("Invalid input for:", key);
                 errorDiv.textContent = `Tarkista ${key}!`;
                 errorDiv.style.display = 'block';
                 return; // Exits the submit handler!
@@ -73,7 +67,6 @@
             body: params.toString()
         })
         .then(response => {
-            console.log("response", response);
             if (!response.ok) {
                 const errorDiv = document.getElementById('form_error');
                 errorDiv.textContent = 'Viestiä ei lähetetty. Yritä uudelleen';
@@ -90,7 +83,7 @@
             successDiv.style.display = 'block';
             successDiv.style.opacity = 0;
             setTimeout(() => {
-                successDiv.style.transition = 'opacity 0.5s';
+                successDiv.style.transition = 'opacity 0.2s';
                 successDiv.style.opacity = 1;
             }, 10);
         })

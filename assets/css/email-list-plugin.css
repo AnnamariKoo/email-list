@@ -1,3 +1,45 @@
-body {
-  background: hotpink;
+#email_list_form {
+  font-family: "Josefin Sans", sans-serif;
+  background: white;
+  border-radius: 25px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+#email_list_form label {
+  margin-bottom: 5px;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-left: 5px;
+}
+
+#email_list_form input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 200;
+}
+
+#email_list_form button {
+  background: #030098;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px 0 25px 25px;
+  margin-top: 30px;
+  padding: 15px;
+  width: fit-content;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.form_notification {
+  max-width: 500px;
+  margin: 30px auto;
 }
