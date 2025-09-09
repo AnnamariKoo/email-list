@@ -38,12 +38,6 @@
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         for (const [key, value] of Object.entries(formObj)) {
-            console.log("key:", key);
-            console.log("value:", value);
-            console.log('value.trim:', value.trim());
-            console.log('value.length', value.length);
-            console.log('value.trim().length', value.trim().length);
-
             if (key === '_wpnonce' || key === '_wp_http_referer') continue;
 
             console.log('value.length', value.length);

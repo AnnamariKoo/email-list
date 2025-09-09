@@ -197,8 +197,7 @@ function handle_enquiry($data){
 
         $post_id = wp_insert_post($postarr);
 
-    foreach($params as $label => $value) 
-        {
+    foreach($params as $label => $value) {
 
             switch($label) {
                 case 'email':
