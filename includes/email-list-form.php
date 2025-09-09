@@ -157,7 +157,6 @@ function handle_enquiry($data){
      $field_etunimi = sanitize_text_field($params['etunimi']);
      $field_sukunimi = sanitize_text_field($params['sukunimi']);
      $field_email = sanitize_email($params['email']);
-     $field_organisaatio = sanitize_text_field($params['organisaatio']);
 
      if ( !isset($params['_wpnonce']) ||!wp_verify_nonce( $params['_wpnonce'], 'wp_rest' ) ) {
          return new WP_Rest_response('Message not sent', 422);

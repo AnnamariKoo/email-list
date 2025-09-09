@@ -16,7 +16,7 @@
     
 
     <label for="email">Sähköposti</label>
-    <input type="text" name="email">
+    <input type="text" id="email" name="email" required>
 
     <label for="organisaatio">Organisaatio</label>
     <input type="text" name="organisaatio">
@@ -25,12 +25,45 @@
 </form>
 
 <script>
-
     document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('enquiry_form').addEventListener('submit', function(event) {
         event.preventDefault();
         const form = event.target;
         const formData = new FormData(form);
+        console.log("Form Data:", Object.fromEntries(formData));
+
+        const formObj = Object.fromEntries(formData);
+        const errorDiv = document.getElementById('form_error');
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        for (const [key, value] of Object.entries(formObj)) {
+            console.log("key:", key);
+            console.log("value:", value);
+            console.log('value.trim:', value.trim());
+            console.log('value.length', value.length);
+            console.log('value.trim().length', value.trim().length);
+
+            if (key === '_wpnonce' || key === '_wp_http_referer') continue;
+
+            console.log('value.length', value.length);
+            if (!value.trim() || value.trim().length < 2) {
+                console.log("Invalid input for:", key);
+                errorDiv.textContent = `Tarkista ${key}!`;
+                errorDiv.style.display = 'block';
+                return; // Exits the submit handler!
+            }
+            // Optionally clear error here if needed
+
+            if (key === "email" && !emailPattern.test(value)) {
+                errorDiv.textContent = 'Syötä kelvollinen sähköpostiosoite!';
+                errorDiv.style.display = 'block';
+                return; // Exits the submit handler!
+                
+            }
+        }
+        errorDiv.textContent = '';
+        errorDiv.style.display = 'none';
 
         // Convert FormData to URL-encoded string
         const params = new URLSearchParams();
@@ -54,7 +87,7 @@
                 return;
             }
                 return response.json(); // <-- get plain text response
-})
+        })
         .then(data => {
             if (!data) return; // If previous .then returned nothing (error)
             form.style.display = 'none';
