@@ -38,6 +38,11 @@
   text-transform: uppercase;
 }
 
+#email_list_form button:hover {
+  cursor: pointer;
+  background-color: #ff00a8;
+}
+
 .button_wrapper {
   margin-top: 10px;
 }
@@ -45,7 +50,6 @@
 #form_error {
   color: red;
   font-size: small;
-  text-transform: uppercase;
   height: 20px;
   margin: 5px;
   visibility: hidden;

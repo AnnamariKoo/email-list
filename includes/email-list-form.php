@@ -214,7 +214,7 @@ function handle_enquiry($data){
 
             add_post_meta($post_id, sanitize_text_field($label), $value);
 
-            $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '<br />';
+            $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '</br>';
         }
 
 

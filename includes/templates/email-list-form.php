@@ -7,16 +7,16 @@
     <?php wp_nonce_field('wp_rest'); ?>
 
 
-    <label for="etunimi">Etunimi</label>
+    <label for="etunimi">Etunimi*</label>
     <input type="text" name="etunimi"></input>
-    <label for="sukunimi">Sukunimi</label>
+    <label for="sukunimi">Sukunimi*</label>
     <input type="text" name="sukunimi">
     
 
-    <label for="email">Sähköposti</label>
+    <label for="email">Sähköposti*</label>
     <input type="text" id="email" name="email" required>
 
-    <label for="organisaatio">Organisaatio</label>
+    <label for="organisaatio">Organisaatio*</label>
     <input type="text" name="organisaatio">
     <div class="button_wrapper">
         <div id="form_error" class="form_notification"></div>
@@ -38,14 +38,14 @@
             if (key === '_wpnonce' || key === '_wp_http_referer') continue;
 
             if (!value.trim() || value.trim().length < 2) {
-                errorDiv.textContent = `Tarkista ${key}!`;
+                errorDiv.textContent = `Tarkasta ${key}! Kenttä on tyhjä tai siinä on liian vähän kirjaimia.`;
                 errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
             }
             // Optionally clear error here if needed
 
             if (key === "email" && !emailPattern.test(value)) {
-                errorDiv.textContent = 'Syötä kelvollinen sähköpostiosoite!';
+                errorDiv.textContent = 'Sähköpostiosoite ei ole oikein!';
                 errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
                 
