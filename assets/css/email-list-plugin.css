@@ -1,18 +1,14 @@
 #email_list_form {
-  font-family: "Railway", sans-serif;
-  background: white;
-  border-radius: 25px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
   max-width: 500px;
-  margin: 30px auto;
-  padding: 50px;
+  margin: 30px 10px;
   display: flex;
   flex-direction: column;
 }
 
 #email_list_form label {
+  font-family: "Josefin Sans", sans-serif;
   margin-bottom: 5px;
-  font-size: 16px;
+  font-size: 18px;
   text-transform: uppercase;
   margin-left: 5px;
 }
@@ -22,8 +18,9 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
+  font-family: "Railway", sans-serif;
   font-size: 14px;
-  font-weight: 200;
+  font-weight: 300;
 }
 
 #email_list_form button {
@@ -34,10 +31,15 @@
   padding: 15px;
   width: fit-content;
   font-family: "Josefin Sans", sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   text-transform: uppercase;
 }
 
+#email_list_form p {
+  font-family: "Railway", sans-serif;
+  font-size: 16px;
+  font-weight: 200;
+}
 #email_list_form button:hover {
   cursor: pointer;
   background-color: #ff00a8;
@@ -49,7 +51,7 @@
 
 #form_error {
   color: red;
-  font-size: small;
+  font-size: 16px;
   height: 20px;
   margin: 5px;
   visibility: hidden;

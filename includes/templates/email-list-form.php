@@ -20,6 +20,7 @@
     <input type="text" name="organisaatio">
     <div class="button_wrapper">
         <div id="form_error" class="form_notification"></div>
+        <p>* Tähdellä merkityt kentät ovat pakollisia</p>
         <button type="submit">Liity postituslistalle</button>
     </div>
 </form>
@@ -38,14 +39,14 @@
             if (key === '_wpnonce' || key === '_wp_http_referer') continue;
 
             if (!value.trim() || value.trim().length < 2) {
-                errorDiv.textContent = `Tarkasta ${key}! Kenttä on tyhjä tai siinä on liian vähän kirjaimia.`;
+                errorDiv.textContent = `Tarkista ${key}! Kenttä on tyhjä tai siinä on liian vähän kirjaimia.`;
                 errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
             }
             // Optionally clear error here if needed
 
             if (key === "email" && !emailPattern.test(value)) {
-                errorDiv.textContent = 'Sähköpostiosoite ei ole oikein!';
+                errorDiv.textContent = 'Tarkista sähköpostiosoite! Se ei ole oikeassa muodossa.';
                 errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
                 
