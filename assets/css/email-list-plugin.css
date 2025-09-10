@@ -49,6 +49,14 @@
   margin-top: 10px;
 }
 
+#form_success {
+  max-width: 200px;
+  margin: 30px 10px;
+  font-family: "Roboto mono", monospace;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
 #form_error {
   color: red;
   font-size: 16px;
@@ -59,7 +67,8 @@
 
 @media only screen and (max-width: 425px) {
   #email_list_form label,
-  #email_list_form button {
+  #email_list_form button,
+  #form_success {
     font-size: 16px;
   }
 

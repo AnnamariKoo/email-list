@@ -46,7 +46,7 @@
             // Optionally clear error here if needed
 
             if (key === "email" && !emailPattern.test(value)) {
-                errorDiv.textContent = 'Tarkista sähköpostiosoite! Se ei ole oikeassa muodossa.';
+                errorDiv.textContent = 'Tarkista sähköpostiosoite! Se ei ole oikeassa';
                 errorDiv.style.visibility = 'visible';
                 return; // Exits the submit handler!
                 
