@@ -56,3 +56,19 @@
   margin: 5px;
   visibility: hidden;
 }
+
+@media only screen and (max-width: 425px) {
+  #email_list_form label,
+  #email_list_form button {
+    font-size: 16px;
+  }
+
+  #email_list_form p,
+  #form_error {
+    font-size: 14px;
+  }
+
+  #form_error {
+    height: auto;
+  }
+}
