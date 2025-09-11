@@ -21,9 +21,18 @@ add_action('admin_init', 'setup_search');
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
 
 function enqueue_custom_scripts() {
-
     wp_enqueue_style('email-list-plugin', MY_PLUGIN_URL . 'assets/css/email-list-plugin.css');
-
+    wp_enqueue_script(
+        'email-list-plugin',
+        MY_PLUGIN_URL . 'assets/js/email-list-plugin.js',
+        array(), // dependencies
+        null,
+        true
+    );
+    // Pass REST URL to JS
+    wp_localize_script('email-list-plugin', 'emailListPluginRestUrl', array(
+        'restUrl' => get_rest_url(null, 'v1/email-form/submit')
+    ));
 }
 
 function setup_search() {
@@ -120,9 +129,9 @@ function create_mailing_list_page(){
         'menu_position' => 30,
         'publicly_queryable' => false,
         'labels'  => [
-            'name' => 'Submissions', 
-            'singular_name' => 'Submission',
-            'edit_item' => 'View submission'
+            'name' => 'Sähköpostilista', 
+            'singular_name' => 'Sähköpostilista',
+            'edit_item' => 'Henkilön tiedot'
         ],
         'supports' => false,
         'capability_type' => 'post',
@@ -136,8 +145,9 @@ function create_mailing_list_page(){
     register_post_type('mailing_list', $args);
 }
 function show_email_list_form() {
+    ob_start();
     include MY_PLUGIN_PATH . 'includes/templates/email-list-form.php';
-
+    return ob_get_clean();
 }
 
 function create_rest_endpoint(){
@@ -214,7 +224,7 @@ function handle_enquiry($data){
 
             add_post_meta($post_id, sanitize_text_field($label), $value);
 
-            $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '</br>';
+            $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '<br>';
         }
 
 

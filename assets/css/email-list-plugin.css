@@ -51,7 +51,8 @@
 
 #form_success {
   max-width: 200px;
-  margin: 30px 10px;
+  margin: 20px auto;
+  justify-content: center;
   font-family: "Roboto mono", monospace;
   font-size: 18px;
   text-transform: uppercase;
