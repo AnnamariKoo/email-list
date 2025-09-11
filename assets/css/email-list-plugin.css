@@ -1,3 +1,5 @@
+/* Styles for email list plugin form */
+
 #email_list_form {
   width: 100%;
   display: flex;
@@ -65,6 +67,8 @@
   margin: 10px;
   visibility: hidden;
 }
+
+/* Mobile settings */
 
 @media only screen and (max-width: 425px) {
   #email_list_form label,

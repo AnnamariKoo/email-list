@@ -5,21 +5,15 @@ if( !defined( 'ABSPATH' ) ) {
 }
 
 add_shortcode('email-list-form', 'show_email_list_form');
-
 add_action('rest_api_init', 'create_rest_endpoint');
-
 add_action('init', 'create_mailing_list_page');
-
 add_action('add_meta_boxes', 'create_meta_box');
-
 add_filter('manage_mailing_list_posts_columns', 'custom_mailing_list_columns');
-
 add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_columns', 10, 2);
-
 add_action('admin_init', 'setup_search');
-
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
 
+// Enqueue CSS and JS files
 function enqueue_custom_scripts() {
     wp_enqueue_style('email-list-plugin', MY_PLUGIN_URL . 'assets/css/email-list-plugin.css');
     wp_enqueue_script(
@@ -35,6 +29,7 @@ function enqueue_custom_scripts() {
     ));
 }
 
+// Setup search to include custom fields
 function setup_search() {
 
     global $typenow;
@@ -44,6 +39,7 @@ function setup_search() {
     }
 }
 
+// Modify search to include custom fields
 function mailing_list_search_override($search, $query) {
 
     global $wpdb;
@@ -64,11 +60,9 @@ function mailing_list_search_override($search, $query) {
     return $search;
 
 }
-
+// Fill custom columns in admin list view (Sähköpostilista)
 function fill_custom_mailing_list_columns($column, $post_id) {
-
     switch($column) {
-
         case 'etunimi':
             echo esc_html(get_post_meta($post_id, 'etunimi', true));
             break;
@@ -82,9 +76,9 @@ function fill_custom_mailing_list_columns($column, $post_id) {
             echo esc_html(get_post_meta($post_id, 'organisaatio', true));
             break;
     }
-
 }
 
+// Customize columns in admin list view (sähköpostilista)
 function custom_mailing_list_columns($columns){
     $columns = array(
 
@@ -98,11 +92,13 @@ function custom_mailing_list_columns($columns){
     return $columns;
 }
 
+// Create meta box for viewing submission details
 function create_meta_box(){
 
     add_meta_box('custom_email_list_form', 'Submission', 'display_submission', 'mailing_list');
 }
 
+// Format submission details for admin list view (sähköpostilista)
 function display_submission(){
 
     $post_metas = get_post_meta( get_the_ID());
@@ -121,6 +117,7 @@ function display_submission(){
 
     }
 
+// Create custom post type for mailing list entries
 function create_mailing_list_page(){
     $args = [
 
@@ -144,12 +141,15 @@ function create_mailing_list_page(){
 
     register_post_type('mailing_list', $args);
 }
+
+// Display the email list form via shortcode
 function show_email_list_form() {
     ob_start();
     include MY_PLUGIN_PATH . 'includes/templates/email-list-form.php';
     return ob_get_clean();
 }
 
+// Create REST API endpoint for form submission
 function create_rest_endpoint(){
     register_rest_route('v1/email-form', 'submit', array(
 
@@ -158,6 +158,8 @@ function create_rest_endpoint(){
     ));
 }
 
+
+// Handle form submission and send email
 function handle_enquiry($data){
 
     //Get all parameters from form
@@ -208,35 +210,34 @@ function handle_enquiry($data){
         $post_id = wp_insert_post($postarr);
 
     foreach($params as $label => $value) {
+        switch($label) {
+            case 'email':
+                $value = sanitize_email($value);
+            break;
 
-            switch($label) {
-                case 'email':
-                    $value = sanitize_email($value);
+            case 'organisaatio':
+                $value = sanitize_text_field($value);
                 break;
 
-                case 'organisaatio':
-                    $value = sanitize_text_field($value);
-                    break;
-
-                default:
-                    $value = sanitize_text_field($value);
-            }
-
-            add_post_meta($post_id, sanitize_text_field($label), $value);
-
-            $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '<br>';
+            default:
+                $value = sanitize_text_field($value);
         }
 
+        add_post_meta($post_id, sanitize_text_field($label), $value);
 
-        wp_mail($recipient_email, $subject, $message, $headers);
-
-        $confirmation_message = 'Kiitos ilmoittautumisesta postituslistalle!';
-
-        if(get_plugin_options('email_list_plugin_message')) {
-            $confirmation_message = get_plugin_options('email_list_plugin_message');
-            $confirmation_message = str_replace('{etunimi}', $field_etunimi, $confirmation_message);
-        }
-
-        return new WP_Rest_Response($confirmation_message, 200);
-
+        $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '<br>';
     }
+
+
+    wp_mail($recipient_email, $subject, $message, $headers);
+
+    $confirmation_message = 'Kiitos ilmoittautumisesta postituslistalle!';
+
+    if(get_plugin_options('email_list_plugin_message')) {
+        $confirmation_message = get_plugin_options('email_list_plugin_message');
+        $confirmation_message = str_replace('{etunimi}', $field_etunimi, $confirmation_message);
+    }
+
+    return new WP_Rest_Response($confirmation_message, 200);
+
+}

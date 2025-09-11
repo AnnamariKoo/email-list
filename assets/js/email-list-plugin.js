@@ -1,15 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Get email list form if it exists
   const form = document.getElementById("email_list_form");
   if (!form) return;
+  // Listen for form submission
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     const formData = new FormData(form);
     const formObj = Object.fromEntries(formData);
     const errorDiv = document.getElementById("form_error");
+    // Regex pattern for basic email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     for (const [key, value] of Object.entries(formObj)) {
+      // Skip nonce and referer fields
       if (key === "_wpnonce" || key === "_wp_http_referer") continue;
+      // Values need to be at least 2 characters long
       if (!value.trim() || value.trim().length < 2) {
         let fieldName = key.charAt(0).toUpperCase() + key.slice(1);
         if (key === "email") {
