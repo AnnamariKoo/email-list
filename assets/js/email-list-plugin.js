@@ -11,13 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const [key, value] of Object.entries(formObj)) {
       if (key === "_wpnonce" || key === "_wp_http_referer") continue;
       if (!value.trim() || value.trim().length < 2) {
-        errorDiv.textContent = `Tarkista ${key}! Kenttä on tyhjä tai siinä on liian vähän kirjaimia.`;
+        const fieldName = key.charAt(0).toUpperCase() + key.slice(1);
+        errorDiv.textContent = `${fieldName} on tyhjä tai siinä on liian vähän kirjaimia.`;
         errorDiv.style.visibility = "visible";
         return;
       }
       if (key === "email" && !emailPattern.test(value)) {
         errorDiv.textContent =
-          "Tarkista sähköpostiosoite! Se ei ole oikeassa muodossa";
+          "Tarkista sähköpostiosoite! Se ei ole oikeassa muodossa.";
         errorDiv.style.visibility = "visible";
         return;
       }
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => {
         if (!response.ok) {
-          errorDiv.textContent = "Viestiä ei lähetetty. Yritä uudelleen";
+          errorDiv.textContent = "Viestiä ei lähetetty. Yritä uudelleen.";
           errorDiv.style.visibility = "visible";
           return;
         }
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 10);
       })
       .catch((error) => {
-        errorDiv.textContent = "Viestiä ei lähetetty. Yritä uudelleen";
+        errorDiv.textContent = "Viestiä ei lähetetty. Yritä uudelleen.";
         errorDiv.style.visibility = "visible";
         console.error("Error:", error);
       });
