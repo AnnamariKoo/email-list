@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!data) return;
         form.style.display = "none";
         const successDiv = document.getElementById("form_success");
+        successDiv.classList.add("active");
         successDiv.textContent = data;
         successDiv.style.display = "block";
         successDiv.style.opacity = 0;

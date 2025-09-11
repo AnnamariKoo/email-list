@@ -52,12 +52,32 @@
 }
 
 #form_success {
-  max-width: 200px;
+  max-width: 250px;
   margin: 20px auto;
   justify-content: center;
   font-family: "Roboto mono", monospace;
   font-size: 18px;
   text-transform: uppercase;
+}
+
+#form_success {
+  max-width: 250px;
+  font-family: "Roboto mono", monospace;
+  font-size: 18px;
+  text-transform: uppercase;
+  text-align: center;
+  /* No border or shadow by default */
+  border: none;
+  box-shadow: none;
+  display: none; /* Hide by default */
+}
+
+#form_success.active {
+  border: 1px solid #161616;
+  border-radius: 25px 25px 0 25px;
+  background: #ffffff;
+  padding: 20px;
+  display: block;
 }
 
 #form_error {
