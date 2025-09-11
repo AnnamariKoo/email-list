@@ -11,14 +11,19 @@ document.addEventListener("DOMContentLoaded", function () {
     for (const [key, value] of Object.entries(formObj)) {
       if (key === "_wpnonce" || key === "_wp_http_referer") continue;
       if (!value.trim() || value.trim().length < 2) {
-        const fieldName = key.charAt(0).toUpperCase() + key.slice(1);
-        errorDiv.textContent = `${fieldName} on tyhjä tai siinä on liian vähän kirjaimia.`;
+        let fieldName = key.charAt(0).toUpperCase() + key.slice(1);
+        if (key === "email") {
+          errorDiv.textContent =
+            "Sähköpostiosoitteessa on liian vähän kirjaimia.";
+        } else {
+          errorDiv.textContent = `${fieldName} on tyhjä tai siinä on liian vähän kirjaimia.`;
+        }
         errorDiv.style.visibility = "visible";
         return;
       }
+
       if (key === "email" && !emailPattern.test(value)) {
-        errorDiv.textContent =
-          "Tarkista sähköpostiosoite! Se ei ole oikeassa muodossa.";
+        errorDiv.textContent = "Sähköpostiosoite ei ole oikeassa muodossa.";
         errorDiv.style.visibility = "visible";
         return;
       }
