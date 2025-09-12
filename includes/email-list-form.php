@@ -13,6 +13,14 @@ add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_
 add_action('admin_init', 'setup_search');
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
 
+// Enqueue admin scripts and styles for mailing list post type
+add_action('admin_enqueue_scripts', function($hook) {
+    if ($hook === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'mailing_list') {
+        wp_enqueue_script('mailing-list-admin', MY_PLUGIN_URL . 'assets/js/mailing-list-admin.js', [], null, true);
+        wp_enqueue_style('mailing-list-admin', MY_PLUGIN_URL . 'assets/css/mailing-list-admin.css');
+    }
+});
+
 // Enqueue script for handling "read" checkbox in admin list view
 add_action('admin_enqueue_scripts', function() {
     wp_enqueue_script('mailing-list-read', MY_PLUGIN_URL . 'assets/js/mailing-list-read.js', [], null, true);
@@ -75,15 +83,19 @@ function fill_custom_mailing_list_columns($column, $post_id) {
         case 'sukunimi':
             echo esc_html(get_post_meta($post_id, 'sukunimi', true));
             break;
-        case 'email':
-            echo esc_html(get_post_meta($post_id, 'email', true));
-            break;
         case 'organisaatio':
             echo esc_html(get_post_meta($post_id, 'organisaatio', true));
             break;
+        case 'paivamaara':
+            $date = get_the_date('d.m.Y H:i', $post_id);
+             echo esc_html($date);
+            break;
+        case 'email':
+            echo esc_html(get_post_meta($post_id, 'email', true));
+            break;
         case 'read':
             $is_read = get_post_meta($post_id, 'read', true);
-            echo '<input type="checkbox" class="mailing-list-read" data-id="' . esc_attr($post_id) . '" ' . checked($is_read, '1', false) . ' />';
+            echo '<input type="checkbox" class="mailing-list-read" data-id="' . esc_attr($post_id) . '" data-read="' . esc_attr($is_read) . '" ' . checked($is_read, '1', false) . ' />';
             break;
     }
 }
@@ -95,8 +107,9 @@ function custom_mailing_list_columns($columns){
         'cb' => $columns['cb'],
         'etunimi' => __('Etunimi', 'email-list-plugin'),
         'sukunimi' => __('Sukunimi', 'email-list-plugin'),
-        'email' => __('Email', 'email-list-plugin'),
         'organisaatio' => __('Organisaatio', 'email-list-plugin'),
+        'paivamaara' => __('Päivämäärä', 'email-list-plugin'),
+        'email' => __('Email', 'email-list-plugin'),
         'read' => __('Luettu', 'email-list-plugin')
     );
 

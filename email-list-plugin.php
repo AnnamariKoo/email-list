@@ -47,6 +47,7 @@ $emailListPlugin->initialize();
 
 }
 
+// AJAX handler for updating "read" status
 add_action('wp_ajax_update_mailing_list_read', function() {
     if (
         !current_user_can('edit_posts') ||
@@ -62,4 +63,27 @@ add_action('wp_ajax_update_mailing_list_read', function() {
     update_post_meta($post_id, 'read', $read);
 
     wp_send_json_success();
+});
+
+// Remove "View" action from mailing list entries in admin
+add_filter('post_row_actions', function($actions, $post) {
+    if ($post->post_type === 'mailing_list') {
+        // Keep only Edit and Trash
+        $allowed = ['trash', 'edit'];
+        foreach ($actions as $key => $value) {
+            if (!in_array($key, $allowed)) {
+                unset($actions[$key]);
+            }
+        }
+    }
+    return $actions;
+}, 10, 2);
+
+// Remove bulk actions except Trash
+add_filter('bulk_actions-edit-mailing_list', function($actions) {
+    // Only keep 'trash' in the bulk actions
+    if (isset($actions['edit'])) {
+        unset($actions['edit']);
+    }
+    return $actions;
 });
