@@ -46,3 +46,20 @@ $emailListPlugin = new EmailListPlugin;
 $emailListPlugin->initialize();
 
 }
+
+add_action('wp_ajax_update_mailing_list_read', function() {
+    if (
+        !current_user_can('edit_posts') ||
+        !isset($_POST['post_id'], $_POST['read'], $_POST['_wpnonce']) ||
+        !wp_verify_nonce($_POST['_wpnonce'], 'mailing_list_read')
+    ) {
+        wp_send_json_error();
+    }
+
+    $post_id = intval($_POST['post_id']);
+    $read = $_POST['read'] === '1' ? '1' : '0';
+
+    update_post_meta($post_id, 'read', $read);
+
+    wp_send_json_success();
+});

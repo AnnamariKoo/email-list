@@ -13,6 +13,12 @@ add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_
 add_action('admin_init', 'setup_search');
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
 
+// Enqueue script for handling "read" checkbox in admin list view
+add_action('admin_enqueue_scripts', function() {
+    wp_enqueue_script('mailing-list-read', MY_PLUGIN_URL . 'assets/js/mailing-list-read.js', [], null, true);
+    wp_localize_script('mailing-list-read', 'mailingListReadNonce', wp_create_nonce('mailing_list_read'));
+});
+
 // Enqueue CSS and JS files
 function enqueue_custom_scripts() {
     wp_enqueue_style('email-list-plugin', MY_PLUGIN_URL . 'assets/css/email-list-plugin.css');
@@ -75,6 +81,10 @@ function fill_custom_mailing_list_columns($column, $post_id) {
         case 'organisaatio':
             echo esc_html(get_post_meta($post_id, 'organisaatio', true));
             break;
+        case 'read':
+            $is_read = get_post_meta($post_id, 'read', true);
+            echo '<input type="checkbox" class="mailing-list-read" data-id="' . esc_attr($post_id) . '" ' . checked($is_read, '1', false) . ' />';
+            break;
     }
 }
 
@@ -87,6 +97,7 @@ function custom_mailing_list_columns($columns){
         'sukunimi' => __('Sukunimi', 'email-list-plugin'),
         'email' => __('Email', 'email-list-plugin'),
         'organisaatio' => __('Organisaatio', 'email-list-plugin'),
+        'read' => __('Luettu', 'email-list-plugin')
     );
 
     return $columns;
