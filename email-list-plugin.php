@@ -23,14 +23,20 @@ class EmailListPlugin {
         require_once( MY_PLUGIN_PATH . 'vendor/autoload.php' );
     }
 
-    public function initialize()
-    {
-
-        include_once MY_PLUGIN_PATH . 'includes/utilities.php';
-
-        include_once MY_PLUGIN_PATH . 'includes/options-page.php';
-
-        include_once MY_PLUGIN_PATH . 'includes/email-list-form.php';
+    public function initialize() {
+        $files = [
+            'includes/utilities.php',
+            'includes/options-page.php',
+            'includes/email-list-form.php'
+        ];
+        foreach($files as $file) {
+            $full_path = MY_PLUGIN_PATH . $file;
+            if (file_exists($full_path) && is_readable($full_path)) {
+                include_once $full_path;
+            } else {
+                error_log("EmailListPlugin: Could not load file: " . $file);
+            }
+        }
     }
 
 }
