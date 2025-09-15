@@ -268,9 +268,9 @@ function handle_enquiry($data){
     //Set recipient email
     $recipient_email = get_plugin_options('email_list_plugin_recipients');
 
-    if(!$recipient_email){
-        $recipient_email = $admin_email;
-    }
+    // if(!$recipient_email){
+    //     $recipient_email = $admin_email;
+    // }
 
     $headers[] = "From: {$admin_name} <{$admin_email}>";
     $headers[] = "Reply-To: {$field_etunimi} <{$field_email}>";
@@ -309,8 +309,9 @@ function handle_enquiry($data){
         $message .=  '<strong>' . sanitize_text_field(ucfirst($label)) . ': </strong>: ' . $value . '<br>';
     }
 
-
-    wp_mail($recipient_email, $subject, $message, $headers);
+    if (isset($recipient_email)) {
+        wp_mail($recipient_email, $subject, $message, $headers);
+    }
 
     $confirmation_message = 'Kiitos ilmoittautumisesta postituslistalle!';
 
