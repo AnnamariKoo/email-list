@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (this.checked) {
           row.classList.add("mailing-list-row-read");
         } else {
+          if (!confirm("Oletko varma, että haluat ottaa merkinnän pois?")) {
+            this.checked = true;
+            row.classList.add("mailing-list-row-read");
+            return;
+          }
           row.classList.remove("mailing-list-row-read");
         }
       });

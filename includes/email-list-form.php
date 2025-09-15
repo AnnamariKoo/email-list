@@ -13,6 +13,63 @@ add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_
 add_action('admin_init', 'setup_search');
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
 
+add_filter('views_edit-mailing_list', function($views) {
+    // Change "All" to "Registerations"
+    if (isset($views['all'])) {
+        $views['all'] = str_replace('All', 'Registrations', $views['all']);
+    }
+    // Remove the "Published" view
+    if (isset($views['publish'])) {
+        unset($views['publish']);
+    }
+    // Change "Draft" to "Restored from Trash"
+    if (isset($views['draft'])) {
+        $views['draft'] = str_replace('Draft', 'Restored from Trash', $views['draft']);
+    }
+    return $views;
+});
+
+// AJAX handler for updating "read" status
+add_action('wp_ajax_update_mailing_list_read', function() {
+    if (
+        !current_user_can('edit_posts') ||
+        !isset($_POST['post_id'], $_POST['read'], $_POST['_wpnonce']) ||
+        !wp_verify_nonce($_POST['_wpnonce'], 'mailing_list_read')
+    ) {
+        wp_send_json_error();
+    }
+
+    $post_id = intval($_POST['post_id']);
+    $read = $_POST['read'] === '1' ? '1' : '0';
+
+    update_post_meta($post_id, 'read', $read);
+
+    wp_send_json_success();
+});
+
+// Remove "View" action from mailing list entries in admin
+add_filter('post_row_actions', function($actions, $post) {
+    if ($post->post_type === 'mailing_list') {
+        // Keep only Edit and Trash
+        $allowed = ['trash', 'edit'];
+        foreach ($actions as $key => $value) {
+            if (!in_array($key, $allowed)) {
+                unset($actions[$key]);
+            }
+        }
+    }
+    return $actions;
+}, 10, 2);
+
+// Remove bulk actions except Trash
+add_filter('bulk_actions-edit-mailing_list', function($actions) {
+    // Only keep 'trash' in the bulk actions
+    if (isset($actions['edit'])) {
+        unset($actions['edit']);
+    }
+    return $actions;
+});
+
 // Enqueue admin scripts and styles for mailing list post type
 add_action('admin_enqueue_scripts', function($hook) {
     if ($hook === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'mailing_list') {
@@ -105,12 +162,12 @@ function custom_mailing_list_columns($columns){
     $columns = array(
 
         'cb' => $columns['cb'],
-        'etunimi' => __('Etunimi', 'email-list-plugin'),
-        'sukunimi' => __('Sukunimi', 'email-list-plugin'),
-        'organisaatio' => __('Organisaatio', 'email-list-plugin'),
-        'paivamaara' => __('Päivämäärä', 'email-list-plugin'),
+        'etunimi' => __('First Name', 'email-list-plugin'),
+        'sukunimi' => __('Last Name', 'email-list-plugin'),
+        'organisaatio' => __('Organization', 'email-list-plugin'),
+        'paivamaara' => __('Date', 'email-list-plugin'),
         'email' => __('Email', 'email-list-plugin'),
-        'read' => __('Luettu', 'email-list-plugin')
+        'read' => __('Added to Mailing List', 'email-list-plugin')
     );
 
     return $columns;
@@ -150,9 +207,9 @@ function create_mailing_list_page(){
         'menu_position' => 30,
         'publicly_queryable' => false,
         'labels'  => [
-            'name' => 'Sähköpostilista', 
-            'singular_name' => 'Sähköpostilista',
-            'edit_item' => 'Henkilön tiedot'
+            'name' => 'Email List', 
+            'singular_name' => 'Email List',
+            'edit_item' => 'Registeration Info'
         ],
         'supports' => false,
         'capability_type' => 'post',

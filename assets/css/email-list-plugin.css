@@ -88,12 +88,6 @@
   visibility: hidden;
 }
 
-/* Style for admin list row when "read" */
-.mailing-list-row-read {
-  font-weight: bold !important;
-  color: #1ca700 !important;
-}
-
 /* Mobile settings */
 
 @media only screen and (max-width: 425px) {
