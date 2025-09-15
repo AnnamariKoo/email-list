@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (this.checked) {
           row.classList.add("mailing-list-row-read");
         } else {
-          if (!confirm("Oletko varma, että haluat ottaa merkinnän pois?")) {
+          if (!confirm("ARE you sure you want to remove the mark?")) {
             this.checked = true;
             row.classList.add("mailing-list-row-read");
             return;

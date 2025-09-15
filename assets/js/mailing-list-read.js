@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((res) => res.json())
         .then((data) => {
           if (!data.success) {
-            alert("Virhe tallennettaessa luettu-tilaa!");
+            alert("Error updating read status.");
           }
         });
     });

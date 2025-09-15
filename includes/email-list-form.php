@@ -12,8 +12,15 @@ add_filter('manage_mailing_list_posts_columns', 'custom_mailing_list_columns');
 add_action('manage_mailing_list_posts_custom_column', 'fill_custom_mailing_list_columns', 10, 2);
 add_action('admin_init', 'setup_search');
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
+add_action('admin_enqueue_scripts', 'enqueue_mailing_list_read_script');
+add_action('admin_enqueue_scripts', 'enqueue_mailing_list_admin_scripts');
+add_filter('bulk_actions-edit-mailing_list', 'modify_mailing_list_bulk_actions');
+add_filter('post_row_actions', 'actions_mailing_list_row_actions', 10, 2);
+add_action('wp_ajax_update_mailing_list_read', 'update_mailing_list_read');
+add_filter('views_edit-mailing_list', 'modify_mailing_list_views');
 
-add_filter('views_edit-mailing_list', function($views) {
+// Modify admin views for mailing list post type
+function modify_mailing_list_views($views) {
     // Change "All" to "Registerations"
     if (isset($views['all'])) {
         $views['all'] = str_replace('All', 'Registrations', $views['all']);
@@ -27,10 +34,11 @@ add_filter('views_edit-mailing_list', function($views) {
         $views['draft'] = str_replace('Draft', 'Restored from Trash', $views['draft']);
     }
     return $views;
-});
+}
+
 
 // AJAX handler for updating "read" status
-add_action('wp_ajax_update_mailing_list_read', function() {
+function update_mailing_list_read() {
     if (
         !current_user_can('edit_posts') ||
         !isset($_POST['post_id'], $_POST['read'], $_POST['_wpnonce']) ||
@@ -45,10 +53,10 @@ add_action('wp_ajax_update_mailing_list_read', function() {
     update_post_meta($post_id, 'read', $read);
 
     wp_send_json_success();
-});
+}
 
 // Remove "View" action from mailing list entries in admin
-add_filter('post_row_actions', function($actions, $post) {
+function actions_mailing_list_row_actions($actions, $post) {
     if ($post->post_type === 'mailing_list') {
         // Keep only Edit and Trash
         $allowed = ['trash', 'edit'];
@@ -59,30 +67,30 @@ add_filter('post_row_actions', function($actions, $post) {
         }
     }
     return $actions;
-}, 10, 2);
+}
 
 // Remove bulk actions except Trash
-add_filter('bulk_actions-edit-mailing_list', function($actions) {
+function modify_mailing_list_bulk_actions($actions) {
     // Only keep 'trash' in the bulk actions
     if (isset($actions['edit'])) {
         unset($actions['edit']);
     }
     return $actions;
-});
+}
 
 // Enqueue admin scripts and styles for mailing list post type
-add_action('admin_enqueue_scripts', function($hook) {
+function enqueue_mailing_list_admin_scripts($hook) {
     if ($hook === 'edit.php' && isset($_GET['post_type']) && $_GET['post_type'] === 'mailing_list') {
         wp_enqueue_script('mailing-list-admin', MY_PLUGIN_URL . 'assets/js/mailing-list-admin.js', [], null, true);
         wp_enqueue_style('mailing-list-admin', MY_PLUGIN_URL . 'assets/css/mailing-list-admin.css');
     }
-});
+}
 
 // Enqueue script for handling "read" checkbox in admin list view
-add_action('admin_enqueue_scripts', function() {
+function enqueue_mailing_list_read_script() {
     wp_enqueue_script('mailing-list-read', MY_PLUGIN_URL . 'assets/js/mailing-list-read.js', [], null, true);
     wp_localize_script('mailing-list-read', 'mailingListReadNonce', wp_create_nonce('mailing_list_read'));
-});
+}
 
 // Enqueue CSS and JS files
 function enqueue_custom_scripts() {
