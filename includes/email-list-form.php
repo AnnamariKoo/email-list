@@ -210,14 +210,16 @@ function display_submission(){
 function create_mailing_list_page(){
     $args = [
 
-        'public' => true,
-        'has_archive' => true,
+        'public' => false,
+        'show_ui' => true,
+        'has_archive' => false,
         'menu_position' => 30,
+        'show_in_rest' => false,
         'publicly_queryable' => false,
         'labels'  => [
             'name' => 'Email List', 
-            'singular_name' => 'Email List',
-            'edit_item' => 'Registeration Info'
+            'singular_name' => 'Email Entry',
+            'edit_item' => 'Registration Info'
         ],
         'supports' => false,
         'capability_type' => 'post',
