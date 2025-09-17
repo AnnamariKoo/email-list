@@ -139,7 +139,7 @@ function mailing_list_search_override($search, $query) {
     return $search;
 
 }
-// Fill custom columns in admin list view (Sähköpostilista)
+// Fill custom columns in admin list view (Email List)
 function fill_custom_mailing_list_columns($column, $post_id) {
     switch($column) {
         case 'etunimi':
@@ -165,7 +165,7 @@ function fill_custom_mailing_list_columns($column, $post_id) {
     }
 }
 
-// Customize columns in admin list view (sähköpostilista)
+// Customize columns in admin list view (Email List)
 function custom_mailing_list_columns($columns){
     $columns = array(
 
@@ -187,7 +187,7 @@ function create_meta_box(){
     add_meta_box('custom_email_list_form', 'Submission', 'display_submission', 'mailing_list');
 }
 
-// Format submission details for admin list view (sähköpostilista)
+// Format submission details for admin list view (Email List)
 function display_submission(){
 
     $post_metas = get_post_meta( get_the_ID());
@@ -278,6 +278,7 @@ function handle_enquiry($data){
     //Set recipient email
     $recipient_email = get_plugin_options('email_list_plugin_recipients');
 
+    // If no recipient email is set, use admin email (commented out because we want to allow no email to be sent if recipient is not set)
     // if(!$recipient_email){
     //     $recipient_email = $admin_email;
     // }

@@ -55,8 +55,8 @@
   font-family: "Roboto mono", monospace;
   font-size: 18px;
   font-weight: 500;
-  text-transform: uppercase;
   text-align: center;
+  line-height: 22px;
   /* No border or shadow by default */
   border: none;
   box-shadow: none;
